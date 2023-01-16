@@ -2,18 +2,15 @@ import pygame, sys, math
 
 class TunnelBack:
     def __init__(self, screen_size, tunnel_lenght, speed):
-        wall_image = pygame.image.load('images/raycast/rock_wall.png')
+        wall_image = pygame.image.load('images/raycast/rock_wall.png').convert()
         self.wall_image = pygame.transform.scale(wall_image, (256, 256))
-        wall_image_blur = pygame.image.load('images/raycast/rock_wall_blur.png')
+        wall_image_blur = pygame.image.load('images/raycast/rock_wall_blur.png').convert()
         self.wall_image_blur = pygame.transform.scale(wall_image_blur, (256, 256))
 
-        floor_image = pygame.image.load('images/raycast/floor.png')
+        floor_image = pygame.image.load('images/raycast/floor.png').convert()
         self.floor_image = pygame.transform.scale(floor_image, (256, 256))
-        floor_image_blur = pygame.image.load('images/raycast/floor_blur.png')
+        floor_image_blur = pygame.image.load('images/raycast/floor_blur.png').convert()
         self.floor_image_blur = pygame.transform.scale(floor_image_blur, (256, 256))
-
-        self.shadow = pygame.Surface(screen_size)
-        self.shadow.fill((0,0,0))
 
         self.FOV = math.pi / 3
         self.HALF_FOV = self.FOV / 2
@@ -25,7 +22,7 @@ class TunnelBack:
         # screen X
         self.SCREEN_DIST_x = (screen_size[0]//2) / math.tan(self.HALF_FOV)
         self.NUM_RAYS_x = screen_size[0] // 2
-        self.SCALE_x = screen_size[0] // self.NUM_RAYS_x                    
+        self.SCALE_x = screen_size[0] // self.NUM_RAYS_x
         self.HALF_NUM_RAYS_x = self.NUM_RAYS_x // 2                         
         self.DELTA_ANGLE_x = self.FOV / self.NUM_RAYS_x
 
@@ -36,11 +33,12 @@ class TunnelBack:
         self.HALF_NUM_RAYS_y = self.NUM_RAYS_y // 2                         
         self.DELTA_ANGLE_y = self.FOV / self.NUM_RAYS_y                        
 
+        self.tunnel_lenght = tunnel_lenght
         self.speed = speed
         self.screen_size = screen_size
-        self.map, self.player_pos = self.get_tunel_and_player_pos(tunnel_lenght)
-        self.rays_horisontal = self.get_rays_horisontal(self.player_pos, tunnel_lenght)
-        self.rays_vertical = self.get_rays_vertical(self.player_pos, tunnel_lenght)
+        self.map, self.player_pos = self.get_tunel_and_player_pos(self.tunnel_lenght)
+        self.rays_horisontal = self.get_rays_horisontal(self.player_pos, self.tunnel_lenght)
+        self.rays_vertical = self.get_rays_vertical(self.player_pos, self.tunnel_lenght)
         self.texture_offset = 0
 
     def get_tunel_and_player_pos(self, lenght) -> tuple:
@@ -267,9 +265,31 @@ class TunnelBack:
 
             window.blit(wall_column, ray[2])
 
+    def update(self):
         self.texture_offset += self.speed
         if self.texture_offset > 255:
             self.texture_offset = 0
+
+    def resize(self, screen_size):
+        self.screen_size = screen_size
+
+        # screen X
+        self.SCREEN_DIST_x = (screen_size[0]//2) / math.tan(self.HALF_FOV)
+        self.NUM_RAYS_x = screen_size[0] // 2
+        self.SCALE_x = screen_size[0] // self.NUM_RAYS_x
+        self.HALF_NUM_RAYS_x = self.NUM_RAYS_x // 2                         
+        self.DELTA_ANGLE_x = self.FOV / self.NUM_RAYS_x
+
+        # screen Y
+        self.SCREEN_DIST_y = (screen_size[1]//2) / math.tan(self.HALF_FOV)
+        self.NUM_RAYS_y = screen_size[1] // 2 
+        self.SCALE_y = screen_size[1] // self.NUM_RAYS_y                           
+        self.HALF_NUM_RAYS_y = self.NUM_RAYS_y // 2                         
+        self.DELTA_ANGLE_y = self.FOV / self.NUM_RAYS_y 
+
+        self.rays_horisontal = self.get_rays_horisontal(self.player_pos, self.tunnel_lenght)
+        self.rays_vertical = self.get_rays_vertical(self.player_pos, self.tunnel_lenght)
+
 
 
 if __name__ == '__main__':
@@ -287,6 +307,7 @@ if __name__ == '__main__':
         pygame.display.set_caption(str(int(clock.get_fps())))
 
         background.draw(game_display)
+        background.update()
 
         clock.tick(0)    
         pygame.display.update()
