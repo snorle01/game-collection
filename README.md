@@ -16,11 +16,17 @@ you can press esc to pause the games and then you can go back to the main menu o
 the last game called ??? can't be run.
 
 # nothing
-nothing is a huge grid that you can move around in and place metal balls on.
+nothing is a huge grid that you can move around in and place objects on.
 
-to move use (W A S D) keys.
+to move the screen move the mouse while holding down the right mouse button.
 
-and to place object click on the metal ball in your hot bar to select it, and then click on a square on the map to place it.
+to zoom inn or out press the - or + key
+
+to get objects you can place you press the e key to open the inventory, and then click on the objects on the bottom left corner.
+
+to place the object you have selected on the grid press the left mouse button.
+
+to remove an object from the grid you just press the left mouse button on the object again and press delete, there might be other options too.
 
 # bullet hell
 in bullet hell you dodge bullets as more and more enemys spawn.
